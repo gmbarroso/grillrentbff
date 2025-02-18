@@ -9,7 +9,6 @@ import errorHandlerMiddleware from './middleware/errorHandlerMiddleware';
 import rateLimitMiddleware from './middleware/rateLimitMiddleware';
 
 const app = express();
-const port = process.env.PORT || 3001;
 
 app.use(requestIdMiddleware);
 app.use(loggingMiddleware);
@@ -19,6 +18,4 @@ app.use('/api', routes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(errorHandlerMiddleware);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+export default app;
