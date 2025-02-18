@@ -1,14 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { IGetUserAuthInfoRequest } from '../types/express';
 
-interface CustomRequest extends Request {
-  user?: {
-    name: string;
-    sub: string;
-  };
-}
-
-const authMiddleware = (req: CustomRequest, res: Response, next: NextFunction): void => {
+const authMiddleware = (req: IGetUserAuthInfoRequest, res: Response, next: NextFunction): void => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {

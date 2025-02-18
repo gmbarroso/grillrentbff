@@ -1,0 +1,87 @@
+# API Documentation
+
+# Group Users
+
+## Register a New User [POST /api/users/register]
++ Request (application/json)
+    + Attributes (object)
+        + name: John Doe (string) - The name of the user
+        + email: john@example.com (string) - The email of the user
+        + password: password123 (string) - The password of the user
+        + apartment: 101 (string) - The apartment of the user
+
++ Response 201 (application/json)
+    + Attributes (object)
+        + message: User registered successfully (string)
+        + user (object)
+            + id: 1 (number) - The ID of the user
+            + name: John Doe (string)
+            + email: john@example.com (string)
+            + apartment: 101 (string)
+
+## Login a User [POST /api/users/login]
++ Request (application/json)
+    + Attributes (object)
+        + email: john@example.com (string) - The email of the user
+        + password: password123 (string) - The password of the user
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token: fake-jwt-token (string) - The JWT token
+
+## Get User Profile [GET /api/users/profile]
++ Request
+    + Headers
+        Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + user (object)
+            + id: 1 (number) - The ID of the user
+            + name: John Doe (string)
+            + email: john@example.com (string)
+            + apartment: 101 (string)
+
+# Group Bookings
+
+## Create a New Booking [POST /api/bookings]
++ Request (application/json)
+    + Headers
+        Authorization: Bearer {token}
+    + Attributes (object)
+        + resourceId: resource-id (string) - The ID of the resource
+        + startTime: 2023-10-01T10:00:00Z (string) - The start time of the booking
+        + endTime: 2023-10-01T12:00:00Z (string) - The end time of the booking
+
++ Response 201 (application/json)
+    + Attributes (object)
+        + message: Booking created successfully (string)
+        + booking (object)
+            + id: 1 (number) - The ID of the booking
+            + resourceId: resource-id (string)
+            + startTime: 2023-10-01T10:00:00Z (string)
+            + endTime: 2023-10-01T12:00:00Z (string)
+
+## Get All Bookings [GET /api/bookings]
++ Request
+    + Headers
+        Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (array[object])
+        + id: 1 (number) - The ID of the booking
+        + resourceId: resource-id (string)
+        + startTime: 2023-10-01T10:00:00Z (string)
+        + endTime: 2023-10-01T12:00:00Z (string)
+
+## Get Bookings by User [GET /api/bookings/user/{userId}]
++ Request
+    + Headers
+        Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (array[object])
+        + id: 1 (number) - The ID of the booking
+        + resourceId: resource-id (string)
+        + startTime: 2023-10-01T10:00:00Z (string)
+        + endTime: 2023-10-01T12:00:00Z (string)
