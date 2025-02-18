@@ -1,5 +1,6 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import userController from '../controllers/userController';
+import bookingController from '../controllers/bookingController';
 import authMiddleware from '../middleware/authMiddleware';
 
 const router = Router();
@@ -17,5 +18,15 @@ router.get('/users/profile', authMiddleware, asyncHandler(async (req: Request, r
 router.put('/users/profile', authMiddleware, asyncHandler(async (req: Request, res: Response) => userController.updateProfile(req, res)));
 router.get('/users', authMiddleware, asyncHandler(async (req: Request, res: Response) => userController.getAllUsers(req, res)));
 router.delete('/users/:id', authMiddleware, asyncHandler(async (req: Request, res: Response) => userController.deleteUser(req, res)));
+
+// Rotas de bookings
+router.post('/bookings', authMiddleware, asyncHandler(async (req: Request, res: Response) => {
+  console.log('Route /bookings called');
+  return bookingController.createBooking(req, res);
+}));
+router.get('/bookings', authMiddleware, asyncHandler(async (req: Request, res: Response) => bookingController.getAllBookings(req, res)));
+router.get('/bookings/user/:userId', authMiddleware, asyncHandler(async (req: Request, res: Response) => bookingController.getBookingsByUser(req, res)));
+router.delete('/bookings/:id', authMiddleware, asyncHandler(async (req: Request, res: Response) => bookingController.deleteBooking(req, res)));
+router.post('/bookings/check-availability', authMiddleware, asyncHandler(async (req: Request, res: Response) => bookingController.checkAvailability(req, res)));
 
 export default router;

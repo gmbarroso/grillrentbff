@@ -1,11 +1,17 @@
-import { Response } from 'express';
-import { IGetUserAuthInfoRequest } from '../types/express';
+import { Request, Response } from 'express';
 import { RegisterUserDto, LoginUserDto, UpdateUserProfileDto } from '../dtos/userDto';
 import { registerUserSchema, loginUserSchema, updateUserProfileSchema } from '../validators/userValidator';
 import userService from '../services/userService';
 
+interface ExtendedRequest extends Request {
+  user?: {
+    name: string;
+    sub: string;
+  };
+}
+
 class UserController {
-  async register(req: IGetUserAuthInfoRequest, res: Response): Promise<void> {
+  async register(req: Request, res: Response): Promise<void> {
     const { error } = registerUserSchema.validate(req.body);
     if (error) {
       res.status(400).send(error.details[0].message);
@@ -21,7 +27,7 @@ class UserController {
     }
   }
 
-  async login(req: IGetUserAuthInfoRequest, res: Response): Promise<void> {
+  async login(req: Request, res: Response): Promise<void> {
     const { error } = loginUserSchema.validate(req.body);
     if (error) {
       res.status(400).send(error.details[0].message);
@@ -37,7 +43,7 @@ class UserController {
     }
   }
 
-  async getProfile(req: IGetUserAuthInfoRequest, res: Response): Promise<void> {
+  async getProfile(req: ExtendedRequest, res: Response): Promise<void> {
     try {
       if (!req.user) {
         res.status(401).send({ message: 'Unauthorized' });
@@ -50,7 +56,7 @@ class UserController {
     }
   }
 
-  async updateProfile(req: IGetUserAuthInfoRequest, res: Response): Promise<void> {
+  async updateProfile(req: ExtendedRequest, res: Response): Promise<void> {
     const { error } = updateUserProfileSchema.validate(req.body);
     if (error) {
       res.status(400).send(error.details[0].message);
@@ -70,12 +76,12 @@ class UserController {
     }
   }
 
-  async getAllUsers(req: IGetUserAuthInfoRequest, res: Response): Promise<void> {
+  async getAllUsers(req: Request, res: Response): Promise<void> {
     const result = await userService.getAllUsers();
     res.status(200).send(result);
   }
 
-  async deleteUser(req: IGetUserAuthInfoRequest, res: Response): Promise<void> {
+  async deleteUser(req: Request, res: Response): Promise<void> {
     try {
       const result = await userService.remove(req.params.id);
       res.status(200).send(result);

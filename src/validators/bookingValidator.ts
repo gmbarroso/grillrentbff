@@ -3,12 +3,12 @@ import Joi from 'joi';
 export const createBookingSchema = Joi.object({
   resourceId: Joi.string().required(),
   userId: Joi.string().required(),
-  startTime: Joi.string().isoDate().required(),
-  endTime: Joi.string().isoDate().required(),
+  startTime: Joi.date().iso().required(),
+  endTime: Joi.date().iso().required(),
 });
 
 export const checkAvailabilitySchema = Joi.object({
   resourceId: Joi.string().required(),
-  startTime: Joi.string().isoDate().required(),
-  endTime: Joi.string().isoDate().required(),
+  startTime: Joi.date().iso().required(),
+  endTime: Joi.date().iso().required(),
 });

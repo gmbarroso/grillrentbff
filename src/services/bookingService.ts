@@ -6,8 +6,8 @@ import { Resource } from '../entities/resource';
 
 class BookingService {
   private bookings: Booking[] = []; // Simulação de um banco de dados
-  private users: User[] = []; // Simulação de um banco de dados de usuários
-  private resources: Resource[] = []; // Simulação de um banco de dados de recursos
+  private users: User[] = [{ id: 'user-id', name: 'John Doe', email: 'john@example.com', password: 'password123', apartment: '101' }]; // Adicione um usuário de exemplo
+  private resources: Resource[] = [{ id: 'resource-id', name: 'Resource 1', description: 'Example description' }]; // Adicione um recurso de exemplo
 
   async create(createBookingDto: CreateBookingDto, userId: string) {
     const { resourceId, startTime, endTime } = createBookingDto;
@@ -43,16 +43,17 @@ class BookingService {
   }
 
   async checkAvailability(resourceId: string, startTime: Date, endTime: Date) {
-    const existingBookings = this.bookings.filter(
-      booking => booking.resourceId === resourceId && booking.startTime <= endTime && booking.endTime >= startTime
+    const overlappingBookings = this.bookings.filter(
+      booking =>
+        booking.resourceId === resourceId &&
+        ((new Date(booking.startTime) < endTime && new Date(booking.startTime) >= startTime) ||
+          (new Date(booking.endTime) > startTime && new Date(booking.endTime) <= endTime))
     );
 
-    if (existingBookings.length > 0) {
-      const existingBooking = existingBookings[0];
-      return { available: false, message: `Resource is already booked by apartment ${existingBooking.user.apartment} at the specified time` };
-    }
-
-    return { available: true, message: 'Available' };
+    return { 
+      available: overlappingBookings.length === 0,
+      message: overlappingBookings.length === 0 ? 'Resource is available' : 'Resource is not available'
+    };
   }
 
   async findByUser(userId: string) {
