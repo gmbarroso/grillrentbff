@@ -14,11 +14,12 @@ class BookingController {
 
     const bookingData: CreateBookingDto = req.body;
     try {
-      if (!req.user) {
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
         res.status(401).send('Unauthorized');
         return;
       }
-      const result = await bookingService.create(bookingData, req.user.sub);
+      const result = await bookingService.create(bookingData, token);
       res.status(201).send(result);
     } catch (err) {
       res.status(400).send({ message: (err as Error).message });
@@ -31,13 +32,27 @@ class BookingController {
   }
 
   async getBookingsByUser(req: Request, res: Response): Promise<void> {
-    const result = await bookingService.findByUser(req.params.userId);
-    res.status(200).send(result);
+    try {
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
+        res.status(401).send('Unauthorized');
+        return;
+      }
+      const result = await bookingService.findByUser(req.params.userId, token);
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(404).send({ message: (err as Error).message });
+    }
   }
 
   async deleteBooking(req: Request, res: Response): Promise<void> {
     try {
-      const result = await bookingService.remove(req.params.id);
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
+        res.status(401).send('Unauthorized');
+        return;
+      }
+      const result = await bookingService.remove(req.params.id, token);
       res.status(200).send(result);
     } catch (err) {
       res.status(404).send({ message: (err as Error).message });

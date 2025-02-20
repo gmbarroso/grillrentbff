@@ -13,7 +13,7 @@ app.use(requestIdMiddleware);
 app.use(loggingMiddleware);
 app.use(rateLimitMiddleware);
 app.use(bodyParser.json());
-app.use('/api', routes);
+app.use(routes); // Remova o prefixo /api
 app.use(errorHandlerMiddleware);
 
 // Documentação

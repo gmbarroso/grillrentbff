@@ -39,11 +39,12 @@ class UserController {
 
   async getProfile(req: UserRequest, res: Response): Promise<void> {
     try {
-      if (!req.user) {
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
         res.status(401).send({ message: 'Unauthorized' });
         return;
       }
-      const result = await userService.getProfile(req.user.sub);
+      const result = await userService.getProfile(token);
       res.status(200).send(result);
     } catch (err) {
       res.status(401).send({ message: (err as Error).message });
@@ -59,11 +60,12 @@ class UserController {
 
     const updateData: UpdateUserProfileDto = req.body;
     try {
-      if (!req.user) {
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
         res.status(401).send({ message: 'Unauthorized' });
         return;
       }
-      const result = await userService.updateProfile(req.user.sub, updateData);
+      const result = await userService.updateProfile(token, updateData);
       res.status(200).send(result);
     } catch (err) {
       res.status(401).send({ message: (err as Error).message });
@@ -77,7 +79,12 @@ class UserController {
 
   async deleteUser(req: Request, res: Response): Promise<void> {
     try {
-      const result = await userService.remove(req.params.id);
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
+        res.status(401).send({ message: 'Unauthorized' });
+        return;
+      }
+      const result = await userService.remove(token);
       res.status(200).send(result);
     } catch (err) {
       res.status(404).send({ message: (err as Error).message });

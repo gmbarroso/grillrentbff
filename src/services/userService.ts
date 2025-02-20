@@ -1,65 +1,180 @@
+import axios from 'axios';
 import { RegisterUserDto, LoginUserDto, UpdateUserProfileDto } from '../dtos/userDto';
-import { ConflictException, UnauthorizedException, NotFoundException } from '../exceptions';
+import { ConflictException, UnauthorizedException, NotFoundException, BadRequestException } from '../exceptions';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { API_URL, USE_MOCKS } from '../config';
 
 class UserService {
   private users: any[] = []; // Simulação de um banco de dados
+  private apiUrl = API_URL;
 
-  async register(createUserDto: RegisterUserDto) {
-    const { name, email, apartment, password } = createUserDto;
+  async register(registerUserDto: RegisterUserDto) {
+    console.log('Registering user:', registerUserDto);
+    if (USE_MOCKS) {
+      const { name, email, apartment, password } = registerUserDto;
 
-    // Verificar se o name, email ou apartment já existem
-    const existingUser = this.users.find(user => user.name === name || user.email === email || user.apartment === apartment);
+      // Verificar se o name, email ou apartment já existem
+      const existingUser = this.users.find(user => user.name === name || user.email === email || user.apartment === apartment);
 
-    if (existingUser) {
-      throw new ConflictException('Name, email or apartment already in use');
+      if (existingUser) {
+        throw new ConflictException('Name, email or apartment already in use');
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const user = { id: this.generateId(), ...registerUserDto, password: hashedPassword };
+      this.users.push(user);
+      return user;
+    } else {
+      try {
+        const hashedPassword = await bcrypt.hash(registerUserDto.password, 10);
+        const response = await axios.post(`${this.apiUrl}/users/register`, { ...registerUserDto, password: hashedPassword });
+        console.log('API response:', response.data);
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('API error:', error.response?.data);
+          if (error.response && error.response.status === 409) {
+            throw new ConflictException(error.response.data.message);
+          }
+          if (error.response && error.response.status === 400) {
+            throw new BadRequestException(error.response.data.message);
+          }
+        }
+        throw error;
+      }
     }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = { id: this.generateId(), ...createUserDto, password: hashedPassword };
-    this.users.push(user);
-    return user;
   }
 
   async login(loginUserDto: LoginUserDto) {
-    const user = this.users.find(user => user.email === loginUserDto.email);
-    if (!user || !(await bcrypt.compare(loginUserDto.password, user.password))) {
-      throw new UnauthorizedException('Invalid credentials');
+    console.log('Logging in user:', loginUserDto);
+    if (USE_MOCKS) {
+      const user = this.users.find(user => user.name === loginUserDto.name);
+      if (!user || !(await bcrypt.compare(loginUserDto.password, user.password))) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+      return { message: 'User logged in successfully', user };
+    } else {
+      try {
+        const response = await axios.post(`${this.apiUrl}/users/login`, loginUserDto);
+        console.log('API response:', response.data);
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('API error:', error.response?.data);
+          if (error.response && error.response.status === 401) {
+            throw new UnauthorizedException(error.response.data.message);
+          }
+        }
+        throw error;
+      }
     }
-    const payload = { name: user.name, sub: user.id };
-    const token = jwt.sign(payload, process.env.JWT_SECRET || 'defaultSecret');
-    return { message: 'User logged in successfully', token };
   }
 
-  async getProfile(userId: string) {
-    const user = this.users.find(user => user.id === userId);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
+  async getProfile(token: string) {
+    console.log('Getting profile for user with token:', token);
+    if (USE_MOCKS) {
+      const user = this.users.find(user => user.id === token);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+      return { message: 'User profile retrieved successfully', user };
+    } else {
+      try {
+        const response = await axios.get(`${this.apiUrl}/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        console.log('API response:', response.data);
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('API error:', error.response?.data);
+          if (error.response && error.response.status === 401) {
+            throw new UnauthorizedException(error.response.data.message);
+          }
+        }
+        throw error;
+      }
     }
-    return { message: 'User profile retrieved successfully', user };
   }
 
-  async updateProfile(userId: string, updateUserDto: UpdateUserProfileDto) {
-    const user = this.users.find(user => user.id === userId);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
+  async updateProfile(token: string, updateUserProfileDto: UpdateUserProfileDto) {
+    console.log('Updating profile for user with token:', token, updateUserProfileDto);
+    if (USE_MOCKS) {
+      const user = this.users.find(user => user.id === token);
+      if (!user) {
+        throw new UnauthorizedException('User not found');
+      }
+      Object.assign(user, updateUserProfileDto);
+      return { message: 'User profile updated successfully', user };
+    } else {
+      try {
+        const response = await axios.put(`${this.apiUrl}/users/profile`, updateUserProfileDto, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        console.log('API response:', response.data);
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('API error:', error.response?.data);
+          if (error.response && error.response.status === 401) {
+            throw new UnauthorizedException(error.response.data.message);
+          }
+        }
+        throw error;
+      }
     }
-    Object.assign(user, updateUserDto);
-    return { message: 'User profile updated successfully', user };
   }
 
   async getAllUsers() {
-    return { message: 'All users retrieved successfully', users: this.users };
+    console.log('Getting all users');
+    if (USE_MOCKS) {
+      return { message: 'All users retrieved successfully', users: this.users };
+    } else {
+      try {
+        const response = await axios.get(`${this.apiUrl}/users`);
+        console.log('API response:', response.data);
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('API error:', error.response?.data);
+        }
+        throw error;
+      }
+    }
   }
 
-  async remove(userId: string) {
-    const userIndex = this.users.findIndex(user => user.id === userId);
-    if (userIndex === -1) {
-      throw new NotFoundException('User not found');
+  async remove(token: string) {
+    console.log('Removing user with token:', token);
+    if (USE_MOCKS) {
+      const userIndex = this.users.findIndex(user => user.id === token);
+      if (userIndex === -1) {
+        throw new NotFoundException('User not found');
+      }
+      this.users.splice(userIndex, 1);
+      return { message: 'User removed successfully' };
+    } else {
+      try {
+        const response = await axios.delete(`${this.apiUrl}/users/${token}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        console.log('API response:', response.data);
+        return response.data;
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error('API error:', error.response?.data);
+          if (error.response && error.response.status === 404) {
+            throw new NotFoundException(error.response.data.message);
+          }
+        }
+        throw error;
+      }
     }
-    this.users.splice(userIndex, 1);
-    return { message: 'User removed successfully' };
   }
 
   private generateId() {
