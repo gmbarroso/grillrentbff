@@ -9,3 +9,14 @@ declare module 'express-serve-static-core' {
     };
   }
 }
+
+export interface UserRequest extends Request {
+  user?: {
+    name: string;
+    sub: string;
+  };
+}
+
+export interface RequestWithRequestId extends Request {
+  requestId?: string;
+}

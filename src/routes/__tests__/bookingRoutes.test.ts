@@ -23,8 +23,6 @@ describe('Booking Routes', () => {
         endTime: new Date(Date.now() + 48 * 3600000).toISOString(),
       });
 
-    console.log('Response status:', response.status);
-    console.log('Response body:', response.body);
 
     expect(response.status).toBe(201);
     expect(response.body).toHaveProperty('message', 'Booking created successfully');

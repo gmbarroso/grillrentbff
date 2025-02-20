@@ -1,14 +1,8 @@
 import { Request, Response } from 'express';
+import { UserRequest } from '../types/express';
 import { RegisterUserDto, LoginUserDto, UpdateUserProfileDto } from '../dtos/userDto';
 import { registerUserSchema, loginUserSchema, updateUserProfileSchema } from '../validators/userValidator';
 import userService from '../services/userService';
-
-interface ExtendedRequest extends Request {
-  user?: {
-    name: string;
-    sub: string;
-  };
-}
 
 class UserController {
   async register(req: Request, res: Response): Promise<void> {
@@ -43,7 +37,7 @@ class UserController {
     }
   }
 
-  async getProfile(req: ExtendedRequest, res: Response): Promise<void> {
+  async getProfile(req: UserRequest, res: Response): Promise<void> {
     try {
       if (!req.user) {
         res.status(401).send({ message: 'Unauthorized' });
@@ -56,7 +50,7 @@ class UserController {
     }
   }
 
-  async updateProfile(req: ExtendedRequest, res: Response): Promise<void> {
+  async updateProfile(req: UserRequest, res: Response): Promise<void> {
     const { error } = updateUserProfileSchema.validate(req.body);
     if (error) {
       res.status(400).send(error.details[0].message);

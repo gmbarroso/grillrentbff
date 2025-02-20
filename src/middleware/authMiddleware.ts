@@ -1,19 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
+import { UserRequest } from '../types/express';
 import jwt from 'jsonwebtoken';
 
-interface AuthenticatedRequest extends Request {
-  user?: {
-    name: string;
-    sub: string;
-  };
-}
-
-const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-  console.log('Authorization header:', req.header('Authorization'));
+const authMiddleware = (req: UserRequest, res: Response, next: NextFunction): void => {
   const token = req.header('Authorization')?.replace('Bearer ', '');
 
   if (!token) {
-    console.log('No token provided');
     res.status(401).send({ message: 'Access denied. No token provided.' });
     return;
   }
@@ -24,10 +16,8 @@ const authMiddleware = (req: AuthenticatedRequest, res: Response, next: NextFunc
       name: decoded.name,
       sub: decoded.sub,
     };
-    console.log('User authenticated:', req.user);
     next();
   } catch (ex) {
-    console.log('Invalid token');
     res.status(400).send({ message: 'Invalid token.' });
   }
 };

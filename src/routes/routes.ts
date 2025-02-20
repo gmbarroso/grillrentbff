@@ -21,7 +21,6 @@ router.delete('/users/:id', authMiddleware, asyncHandler(async (req: Request, re
 
 // Rotas de bookings
 router.post('/bookings', authMiddleware, asyncHandler(async (req: Request, res: Response) => {
-  console.log('Route /bookings called');
   return bookingController.createBooking(req, res);
 }));
 router.get('/bookings', authMiddleware, asyncHandler(async (req: Request, res: Response) => bookingController.getAllBookings(req, res)));

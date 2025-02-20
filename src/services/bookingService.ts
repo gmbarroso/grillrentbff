@@ -5,28 +5,25 @@ import { User } from '../entities/user';
 import { Resource } from '../entities/resource';
 
 class BookingService {
-  private bookings: Booking[] = []; // Simulação de um banco de dados
-  private users: User[] = [{ id: 'user-id', name: 'John Doe', email: 'john@example.com', password: 'password123', apartment: '101' }]; // Adicione um usuário de exemplo
-  private resources: Resource[] = [{ id: 'resource-id', name: 'Resource 1', description: 'Example description' }]; // Adicione um recurso de exemplo
+  private bookings: Booking[] = [];
+  private users: User[] = [{ id: 'user-id', name: 'John Doe', email: 'john@example.com', password: 'password123', apartment: '101' }];
+  private resources: Resource[] = [{ id: 'resource-id', name: 'Resource 1', description: 'Example description' }];
 
   async create(createBookingDto: CreateBookingDto, userId: string) {
     const { resourceId, startTime, endTime } = createBookingDto;
 
-    // Verificar se a reserva está sendo feita para dias futuros
     const currentDate = new Date();
-    currentDate.setHours(0, 0, 0, 0); // Zerar horas, minutos, segundos e milissegundos
+    currentDate.setHours(0, 0, 0, 0);
     if (new Date(startTime) <= currentDate) {
       throw new BadRequestException('Cannot create booking for today or a past date');
     }
 
-    // Verificar disponibilidade
     const isAvailable = await this.checkAvailability(resourceId, new Date(startTime), new Date(endTime));
 
     if (!isAvailable.available) {
       throw new BadRequestException(isAvailable.message);
     }
 
-    // Verificar se o recurso existe
     const resource = this.resources.find(resource => resource.id === resourceId);
     if (!resource) {
       throw new BadRequestException('Resource not found');

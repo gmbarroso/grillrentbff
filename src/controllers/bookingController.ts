@@ -1,21 +1,13 @@
 import { Request, Response } from 'express';
+import { UserRequest } from '../types/express';
 import { CreateBookingDto, CheckAvailabilityDto } from '../dtos/bookingDto';
 import { createBookingSchema, checkAvailabilitySchema } from '../validators/bookingValidator';
 import bookingService from '../services/bookingService';
 
-interface ExtendedRequest extends Request {
-  user?: {
-    name: string;
-    sub: string;
-  };
-}
-
 class BookingController {
-  async createBooking(req: ExtendedRequest, res: Response): Promise<void> {
-    console.log('Request body:', req.body);
+  async createBooking(req: UserRequest, res: Response): Promise<void> {
     const { error } = createBookingSchema.validate(req.body);
     if (error) {
-      console.log('Validation error:', error.details[0].message);
       res.status(400).send(error.details[0].message);
       return;
     }
@@ -23,14 +15,12 @@ class BookingController {
     const bookingData: CreateBookingDto = req.body;
     try {
       if (!req.user) {
-        console.log('Unauthorized access');
         res.status(401).send('Unauthorized');
         return;
       }
       const result = await bookingService.create(bookingData, req.user.sub);
       res.status(201).send(result);
     } catch (err) {
-      console.log('Error creating booking:', (err as Error).message);
       res.status(400).send({ message: (err as Error).message });
     }
   }
