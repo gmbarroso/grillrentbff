@@ -73,8 +73,17 @@ class UserController {
   }
 
   async getAllUsers(req: Request, res: Response): Promise<void> {
-    const result = await userService.getAllUsers();
-    res.status(200).send(result);
+    try {
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
+        res.status(401).send({ message: 'Unauthorized' });
+        return;
+      }
+      const result = await userService.getAllUsers(token);
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(401).send({ message: (err as Error).message });
+    }
   }
 
   async deleteUser(req: Request, res: Response): Promise<void> {

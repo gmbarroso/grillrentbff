@@ -131,19 +131,26 @@ class UserService {
     }
   }
 
-  async getAllUsers() {
+  async getAllUsers(token: string) {
     console.log('Getting all users');
     console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       return { message: 'All users retrieved successfully', users: this.users };
     } else {
       try {
-        const response = await axios.get(`${this.apiUrl}/users`);
+        const response = await axios.get(`${this.apiUrl}/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
         console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error('API error:', error.response?.data);
+          if (error.response && error.response.status === 401) {
+            throw new UnauthorizedException(error.response.data.message);
+          }
         }
         throw error;
       }

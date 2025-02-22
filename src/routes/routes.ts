@@ -32,6 +32,6 @@ router.post('/bookings', asyncHandler(async (req: Request, res: Response) => {
 router.get('/bookings', asyncHandler(async (req: Request, res: Response) => bookingController.getAllBookings(req, res)));
 router.get('/bookings/user/:userId', asyncHandler(async (req: Request, res: Response) => bookingController.getBookingsByUser(req, res)));
 router.delete('/bookings/:id', asyncHandler(async (req: Request, res: Response) => bookingController.deleteBooking(req, res)));
-router.post('/bookings/check-availability', asyncHandler(async (req: Request, res: Response) => bookingController.checkAvailability(req, res)));
+router.get('/bookings/availability', asyncHandler(async (req: Request, res: Response) => bookingController.availability(req, res)));
 
 export default router;

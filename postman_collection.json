@@ -271,11 +271,11 @@
           }
         },
         "url": {
-          "raw": "http://localhost:3001/bookings/check-availability",
+          "raw": "http://localhost:3001/bookings/availability",
           "protocol": "http",
           "host": ["localhost"],
           "port": "3001",
-          "path": ["bookings", "check-availability"]
+          "path": ["bookings", "availability"]
         }
       },
       "response": []

@@ -27,8 +27,17 @@ class BookingController {
   }
 
   async getAllBookings(req: Request, res: Response): Promise<void> {
-    const result = await bookingService.findAll();
-    res.status(200).send(result);
+    try {
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
+        res.status(401).send('Unauthorized');
+        return;
+      }
+      const result = await bookingService.findAll(token);
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(401).send({ message: (err as Error).message });
+    }
   }
 
   async getBookingsByUser(req: Request, res: Response): Promise<void> {
@@ -59,16 +68,25 @@ class BookingController {
     }
   }
 
-  async checkAvailability(req: Request, res: Response): Promise<void> {
-    const { error } = checkAvailabilitySchema.validate(req.body);
+  async availability(req: Request, res: Response): Promise<void> {
+    const { error } = checkAvailabilitySchema.validate(req.query);
     if (error) {
       res.status(400).send(error.details[0].message);
       return;
     }
 
-    const availabilityData: CheckAvailabilityDto = req.body;
-    const result = await bookingService.checkAvailability(availabilityData.resourceId, new Date(availabilityData.startTime), new Date(availabilityData.endTime));
-    res.status(200).send(result);
+    const { resourceId, startTime, endTime } = req.query as unknown as CheckAvailabilityDto;
+    try {
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
+        res.status(401).send('Unauthorized');
+        return;
+      }
+      const result = await bookingService.checkAvailability(resourceId, new Date(startTime), new Date(endTime), token);
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(400).send({ message: (err as Error).message });
+    }
   }
 }
 
