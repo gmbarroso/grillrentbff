@@ -8,7 +8,7 @@ import { API_URL, USE_MOCKS } from '../config';
 
 class BookingService {
   private bookings: Booking[] = [];
-  private users: User[] = [{ id: 'user-id', name: 'John Doe', email: 'john@example.com', password: 'password123', apartment: '101' }];
+  private users: User[] = [{ id: 'user-id', name: 'John Doe', email: 'john@example.com', password: 'password123', apartment: '101', block: 1, role: 'resident'}];
   private resources: Resource[] = [{ id: 'resource-id', name: 'Resource 1', description: 'Example description' }];
   private apiUrl = API_URL;
 

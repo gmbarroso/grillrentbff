@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { RegisterUserDto, LoginUserDto, UpdateUserProfileDto } from '../dtos/userDto';
 import { ConflictException, UnauthorizedException, NotFoundException, BadRequestException } from '../exceptions';
-import bcrypt from 'bcrypt';
 import { API_URL, USE_MOCKS } from '../config';
 
 class UserService {
@@ -10,24 +9,23 @@ class UserService {
 
   async register(registerUserDto: RegisterUserDto) {
     console.log('Registering user:', registerUserDto);
+    console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
-      const { name, email, apartment, password } = registerUserDto;
+      const { name, email, apartment, password, block } = registerUserDto;
 
-      // Verificar se o name, email ou apartment já existem
       const existingUser = this.users.find(user => user.name === name || user.email === email || user.apartment === apartment);
 
       if (existingUser) {
         throw new ConflictException('Name, email or apartment already in use');
       }
 
-      const hashedPassword = await bcrypt.hash(password, 10);
-      const user = { id: this.generateId(), ...registerUserDto, password: hashedPassword };
+      const user = { id: this.generateId(), ...registerUserDto };
       this.users.push(user);
+      console.log('User registered in mock DB:', user);
       return user;
     } else {
       try {
-        const hashedPassword = await bcrypt.hash(registerUserDto.password, 10);
-        const response = await axios.post(`${this.apiUrl}/users/register`, { ...registerUserDto, password: hashedPassword });
+        const response = await axios.post(`${this.apiUrl}/users/register`, registerUserDto);
         console.log('API response:', response.data);
         return response.data;
       } catch (error) {
@@ -47,11 +45,13 @@ class UserService {
 
   async login(loginUserDto: LoginUserDto) {
     console.log('Logging in user:', loginUserDto);
+    console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
-      const user = this.users.find(user => user.name === loginUserDto.name);
-      if (!user || !(await bcrypt.compare(loginUserDto.password, user.password))) {
+      const user = this.users.find(user => user.apartment === loginUserDto.apartment);
+      if (!user || user.password !== loginUserDto.password) {
         throw new UnauthorizedException('Invalid credentials');
       }
+      console.log('User logged in successfully in mock DB:', user);
       return { message: 'User logged in successfully', user };
     } else {
       try {
@@ -72,6 +72,7 @@ class UserService {
 
   async getProfile(token: string) {
     console.log('Getting profile for user with token:', token);
+    console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       const user = this.users.find(user => user.id === token);
       if (!user) {
@@ -101,6 +102,7 @@ class UserService {
 
   async updateProfile(token: string, updateUserProfileDto: UpdateUserProfileDto) {
     console.log('Updating profile for user with token:', token, updateUserProfileDto);
+    console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       const user = this.users.find(user => user.id === token);
       if (!user) {
@@ -131,6 +133,7 @@ class UserService {
 
   async getAllUsers() {
     console.log('Getting all users');
+    console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       return { message: 'All users retrieved successfully', users: this.users };
     } else {
@@ -149,6 +152,7 @@ class UserService {
 
   async remove(token: string) {
     console.log('Removing user with token:', token);
+    console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       const userIndex = this.users.findIndex(user => user.id === token);
       if (userIndex === -1) {

@@ -1,344 +1,284 @@
 {
-    "info": {
-      "name": "GrillRentBFF API",
-      "_postman_id": "12345678-1234-1234-1234-123456789012",
-      "description": "Coleção de chamadas para a API do GrillRentBFF",
-      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  "info": {
+    "name": "GrillRent BFF API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "name": "John Doe",
+            "email": "john@example.com",
+            "password": "password123",
+            "apartment": "101",
+            "block": 1,
+            "role": "resident"
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/users/register",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["users", "register"]
+        }
+      },
+      "response": []
     },
-    "item": [
-      {
-        "name": "User Registration",
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"apartment\": \"101\"\n}"
+    {
+      "name": "Login User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "name": "John Doe",
+            "password": "password123"
+          }
+        },
+        "url": {
+          "raw": "http://localhost:3001/users/login",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["users", "login"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3001/users/profile",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["users", "profile"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update User Profile",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
           },
-          "url": {
-            "raw": "http://localhost:3000/api/users/register",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "users",
-              "register"
-            ]
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "name": "John Doe Updated",
+            "email": "john.updated@example.com",
+            "apartment": "102",
+            "block": 2,
+            "role": "admin"
           }
         },
-        "response": []
+        "url": {
+          "raw": "http://localhost:3001/users/profile",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["users", "profile"]
+        }
       },
-      {
-        "name": "User Login",
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+      "response": []
+    },
+    {
+      "name": "Get All Users",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3001/users",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["users"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete User",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3001/users/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["users", "{{userId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Booking",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
           },
-          "url": {
-            "raw": "http://localhost:3000/api/users/login",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "users",
-              "login"
-            ]
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "resourceId": "resource-id",
+            "startTime": "2025-02-22T10:00:00.000Z",
+            "endTime": "2025-02-22T12:00:00.000Z"
           }
         },
-        "response": []
+        "url": {
+          "raw": "http://localhost:3001/bookings",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["bookings"]
+        }
       },
-      {
-        "name": "Get User Profile",
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{token}}"
-            }
-          ],
-          "url": {
-            "raw": "http://localhost:3000/api/users/profile",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "users",
-              "profile"
-            ]
+      "response": []
+    },
+    {
+      "name": "Get All Bookings",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
           }
-        },
-        "response": []
+        ],
+        "url": {
+          "raw": "http://localhost:3001/bookings",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["bookings"]
+        }
       },
-      {
-        "name": "Update User Profile",
-        "request": {
-          "method": "PUT",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{token}}"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"name\": \"John Doe Updated\",\n  \"apartment\": \"102\"\n}"
+      "response": []
+    },
+    {
+      "name": "Get Bookings By User",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3001/bookings/user/{{userId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["bookings", "user", "{{userId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Booking",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3001/bookings/{{bookingId}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["bookings", "{{bookingId}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Check Availability",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
           },
-          "url": {
-            "raw": "http://localhost:3000/api/users/profile",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "users",
-              "profile"
-            ]
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": {
+            "resourceId": "resource-id",
+            "startTime": "2025-02-22T10:00:00.000Z",
+            "endTime": "2025-02-22T12:00:00.000Z"
           }
         },
-        "response": []
+        "url": {
+          "raw": "http://localhost:3001/bookings/check-availability",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["bookings", "check-availability"]
+        }
       },
-      {
-        "name": "Get All Users",
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{token}}"
-            }
-          ],
-          "url": {
-            "raw": "http://localhost:3000/api/users",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "users"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Delete User",
-        "request": {
-          "method": "DELETE",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{token}}"
-            }
-          ],
-          "url": {
-            "raw": "http://localhost:3000/api/users/:id",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "users",
-              ":id"
-            ],
-            "variable": [
-              {
-                "key": "id",
-                "value": "user-id"
-              }
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Create Booking",
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{token}}"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"resourceId\": \"resource-id\",\n  \"startTime\": \"2025-02-19T20:31:46.940Z\",\n  \"endTime\": \"2025-02-20T20:31:46.940Z\"\n}"
-          },
-          "url": {
-            "raw": "http://localhost:3000/api/bookings",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "bookings"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Get All Bookings",
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{token}}"
-            }
-          ],
-          "url": {
-            "raw": "http://localhost:3000/api/bookings",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "bookings"
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Get Bookings by User",
-        "request": {
-          "method": "GET",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{token}}"
-            }
-          ],
-          "url": {
-            "raw": "http://localhost:3000/api/bookings/user/:userId",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "bookings",
-              "user",
-              ":userId"
-            ],
-            "variable": [
-              {
-                "key": "userId",
-                "value": "user-id"
-              }
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Delete Booking",
-        "request": {
-          "method": "DELETE",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{token}}"
-            }
-          ],
-          "url": {
-            "raw": "http://localhost:3000/api/bookings/:id",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "bookings",
-              ":id"
-            ],
-            "variable": [
-              {
-                "key": "id",
-                "value": "booking-id"
-              }
-            ]
-          }
-        },
-        "response": []
-      },
-      {
-        "name": "Check Availability",
-        "request": {
-          "method": "POST",
-          "header": [
-            {
-              "key": "Authorization",
-              "value": "Bearer {{token}}"
-            },
-            {
-              "key": "Content-Type",
-              "value": "application/json"
-            }
-          ],
-          "body": {
-            "mode": "raw",
-            "raw": "{\n  \"resourceId\": \"resource-id\",\n  \"startTime\": \"2025-02-19T20:31:46.940Z\",\n  \"endTime\": \"2025-02-20T20:31:46.940Z\"\n}"
-          },
-          "url": {
-            "raw": "http://localhost:3000/api/bookings/check-availability",
-            "protocol": "http",
-            "host": [
-              "localhost"
-            ],
-            "port": "3000",
-            "path": [
-              "api",
-              "bookings",
-              "check-availability"
-            ]
-          }
-        },
-        "response": []
-      }
-    ]
-  }
+      "response": []
+    }
+  ]
+}

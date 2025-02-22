@@ -15,7 +15,7 @@ class UserController {
     const userData: RegisterUserDto = req.body;
     try {
       const user = await userService.register(userData);
-      res.status(201).send({ message: 'User registered successfully', user });
+      res.status(201).send(user);
     } catch (err) {
       res.status(409).send({ message: (err as Error).message });
     }
