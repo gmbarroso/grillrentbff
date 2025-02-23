@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { UserRequest } from '../types/express';
-import { CreateBookingDto, CheckAvailabilityDto } from '../dtos/bookingDto';
-import { createBookingSchema, checkAvailabilitySchema } from '../validators/bookingValidator';
+import { CreateBookingDto } from '../dtos/bookingDto';
+import { createBookingSchema } from '../validators/bookingValidator';
 import bookingService from '../services/bookingService';
 
 class BookingController {
@@ -69,20 +69,21 @@ class BookingController {
   }
 
   async availability(req: Request, res: Response): Promise<void> {
-    const { error } = checkAvailabilitySchema.validate(req.query);
-    if (error) {
-      res.status(400).send(error.details[0].message);
+    const { resourceId } = req.params;
+    const { startTime, endTime } = req.query;
+
+    if (!resourceId || !startTime || !endTime) {
+      res.status(400).send({ message: 'Missing required parameters' });
       return;
     }
 
-    const { resourceId, startTime, endTime } = req.query as unknown as CheckAvailabilityDto;
     try {
       const token = req.header('Authorization')?.replace('Bearer ', '');
       if (!token) {
         res.status(401).send('Unauthorized');
         return;
       }
-      const result = await bookingService.checkAvailability(resourceId, new Date(startTime), new Date(endTime), token);
+      const result = await bookingService.checkAvailability(resourceId, new Date(startTime as string), new Date(endTime as string), token);
       res.status(200).send(result);
     } catch (err) {
       res.status(400).send({ message: (err as Error).message });

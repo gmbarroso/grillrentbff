@@ -5,9 +5,3 @@ export const createBookingSchema = Joi.object({
   startTime: Joi.date().iso().required(),
   endTime: Joi.date().iso().required(),
 });
-
-export const checkAvailabilitySchema = Joi.object({
-  resourceId: Joi.string().required(),
-  startTime: Joi.date().iso().required(),
-  endTime: Joi.date().iso().required(),
-});

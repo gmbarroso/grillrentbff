@@ -140,11 +140,11 @@ class BookingService {
       return { message: 'Availability checked successfully', isAvailable };
     } else {
       try {
-        const response = await axios.get(`${this.apiUrl}/bookings/availability`, {
+        const response = await axios.get(`${this.apiUrl}/bookings/availability/${resourceId}`, {
           headers: {
             Authorization: `Bearer ${token}`
           },
-          params: { resourceId, startTime, endTime }
+          params: { startTime, endTime }
         });
         console.log('API response:', response.data);
         return response.data;
