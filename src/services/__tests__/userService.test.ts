@@ -1,6 +1,6 @@
 import userService from '../userService';
 import { RegisterUserDto, LoginUserDto } from '../../dtos/userDto';
-import { ConflictException, UnauthorizedException, NotFoundException } from '../../exceptions';
+import { ConflictException, UnauthorizedException, NotFoundException, BadRequestException } from '../../exceptions';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -15,7 +15,8 @@ describe('UserService', () => {
       name: 'John Doe',
       email: 'john@example.com',
       apartment: '101',
-      password: 'password123'
+      password: 'password123',
+      block: 1
     };
 
     const user = await userService.register(registerUserDto);
@@ -32,7 +33,8 @@ describe('UserService', () => {
       name: 'John Doe',
       email: 'john@example.com',
       apartment: '101',
-      password: 'password123'
+      password: 'password123',
+      block: 1
     };
 
     await userService.register(registerUserDto);
@@ -45,13 +47,15 @@ describe('UserService', () => {
       name: 'John Doe',
       email: 'john@example.com',
       apartment: '101',
-      password: 'password123'
+      password: 'password123',
+      block: 1
     };
 
     await userService.register(registerUserDto);
 
     const loginUserDto: LoginUserDto = {
-      email: 'john@example.com',
+      apartment: '101',
+      block: 1,
       password: 'password123'
     };
 
@@ -65,7 +69,8 @@ describe('UserService', () => {
 
   it('should not login a user with invalid credentials', async () => {
     const loginUserDto: LoginUserDto = {
-      email: 'john@example.com',
+      apartment: '101',
+      block: 1,
       password: 'wrongpassword'
     };
 
@@ -77,7 +82,8 @@ describe('UserService', () => {
       name: 'John Doe',
       email: 'john@example.com',
       apartment: '101',
-      password: 'password123'
+      password: 'password123',
+      block: 1
     };
 
     const user = await userService.register(registerUserDto);
@@ -92,7 +98,8 @@ describe('UserService', () => {
       name: 'John Doe',
       email: 'john@example.com',
       apartment: '101',
-      password: 'password123'
+      password: 'password123',
+      block: 1
     };
 
     const user = await userService.register(registerUserDto);
@@ -113,7 +120,8 @@ describe('UserService', () => {
       name: 'John Doe',
       email: 'john@example.com',
       apartment: '101',
-      password: 'password123'
+      password: 'password123',
+      block: 1
     };
 
     await userService.register(registerUserDto);
@@ -129,7 +137,8 @@ describe('UserService', () => {
       name: 'John Doe',
       email: 'john@example.com',
       apartment: '101',
-      password: 'password123'
+      password: 'password123',
+      block: 1
     };
 
     const user = await userService.register(registerUserDto);

@@ -27,6 +27,7 @@ describe('UserController', () => {
       email: 'john@example.com',
       password: 'password123',
       apartment: '101',
+      block: 1,
     };
 
     req.body = userData;
@@ -35,23 +36,24 @@ describe('UserController', () => {
     await userController.register(req as Request, res as Response);
 
     expect(statusMock).toHaveBeenCalledWith(201);
-    expect(sendMock).toHaveBeenCalledWith({ message: 'User registered successfully', user: userData });
+    expect(sendMock).toHaveBeenCalledWith(userData);
   });
 
   it('should login a user', async () => {
     const loginData: LoginUserDto = {
-      email: 'john@example.com',
+      apartment: '101',
+      block: 1,
       password: 'password123',
     };
 
     req.body = loginData;
-    const token = 'fake-jwt-token';
-    (userService.login as jest.Mock).mockResolvedValue({ token });
+    const result = { message: 'User logged in successfully', user: { id: 'user-id', name: 'John Doe' } };
+    (userService.login as jest.Mock).mockResolvedValue(result);
 
     await userController.login(req as Request, res as Response);
 
     expect(statusMock).toHaveBeenCalledWith(200);
-    expect(sendMock).toHaveBeenCalledWith({ token });
+    expect(sendMock).toHaveBeenCalledWith(result);
   });
 
   it('should get user profile', async () => {

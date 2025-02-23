@@ -279,6 +279,36 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Check Availability",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "http://localhost:3001/bookings/availability/{{resourceId}}?startTime={{startTime}}&endTime={{endTime}}",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3001",
+          "path": ["bookings", "availability", "{{resourceId}}"],
+          "query": [
+            {
+              "key": "startTime",
+              "value": "{{startTime}}"
+            },
+            {
+              "key": "endTime",
+              "value": "{{endTime}}"
+            }
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }

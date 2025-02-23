@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import bookingController from '../bookingController';
 import bookingService from '../../services/bookingService';
 import { CreateBookingDto } from '../../dtos/bookingDto';
+import request from 'supertest';
+import app from '../../app';
 
 jest.mock('../../services/bookingService');
 
@@ -10,6 +12,11 @@ describe('BookingController', () => {
   let res: Partial<Response>;
   let statusMock: jest.Mock;
   let sendMock: jest.Mock;
+  let token: string;
+
+  beforeAll(() => {
+    token = 'test-token';
+  });
 
   beforeEach(() => {
     req = {};
@@ -58,5 +65,61 @@ describe('BookingController', () => {
 
     expect(statusMock).toHaveBeenCalledWith(200);
     expect(sendMock).toHaveBeenCalledWith(bookings);
+  });
+
+  it('should check availability of a resource', async () => {
+    const resourceId = 'resource-id';
+    const startTime = new Date(Date.now() + 24 * 3600000).toISOString();
+    const endTime = new Date(Date.now() + 48 * 3600000).toISOString();
+
+    (bookingService.checkAvailability as jest.Mock).mockResolvedValue({
+      available: true,
+      message: 'Available'
+    });
+
+    const response = await request(app)
+      .get(`/bookings/availability/${resourceId}`)
+      .query({ startTime, endTime })
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual({
+      available: true,
+      message: 'Available'
+    });
+  });
+
+  it('should return 400 if required parameters are missing', async () => {
+    const response = await request(app)
+      .get('/bookings/availability/resource-id')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ message: 'Missing required parameters' });
+  });
+
+  it('should return 401 if token is missing', async () => {
+    const response = await request(app)
+      .get('/bookings/availability/resource-id')
+      .query({ startTime: new Date().toISOString(), endTime: new Date().toISOString() });
+
+    expect(response.status).toBe(401);
+    expect(response.body).toEqual({ message: 'Unauthorized' });
+  });
+
+  it('should return 400 if service throws an error', async () => {
+    const resourceId = 'resource-id';
+    const startTime = new Date(Date.now() + 24 * 3600000).toISOString();
+    const endTime = new Date(Date.now() + 48 * 3600000).toISOString();
+
+    (bookingService.checkAvailability as jest.Mock).mockRejectedValue(new Error('Service error'));
+
+    const response = await request(app)
+      .get(`/bookings/availability/${resourceId}`)
+      .query({ startTime, endTime })
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(response.status).toBe(400);
+    expect(response.body).toEqual({ message: 'Service error' });
   });
 });

@@ -1,6 +1,6 @@
 import bookingService from '../bookingService';
 import { CreateBookingDto } from '../../dtos/bookingDto';
-import { BadRequestException, NotFoundException } from '../../exceptions';
+import { BadRequestException, NotFoundException, UnauthorizedException } from '../../exceptions';
 
 describe('BookingService', () => {
   beforeEach(() => {
@@ -44,7 +44,7 @@ describe('BookingService', () => {
 
     await bookingService.create(bookingData, 'user-id');
 
-    const result = await bookingService.checkAvailability('resource-id', new Date(Date.now() + 24 * 3600000), new Date(Date.now() + 48 * 3600000));
+    const result = await bookingService.checkAvailability('resource-id', new Date(Date.now() + 24 * 3600000), new Date(Date.now() + 48 * 3600000), 'user-id');
 
     expect(result.available).toBe(false);
   });
@@ -59,7 +59,7 @@ describe('BookingService', () => {
 
     await bookingService.create(bookingData, 'user-id');
 
-    const result = await bookingService.findByUser('user-id');
+    const result = await bookingService.findByUser('user-id', 'user-id');
 
     expect(result.length).toBe(1);
     expect(result[0].resourceId).toBe(bookingData.resourceId);
@@ -75,7 +75,7 @@ describe('BookingService', () => {
 
     await bookingService.create(bookingData, 'user-id');
 
-    const result = await bookingService.findAll();
+    const result = await bookingService.findAll('user-id');
 
     expect(result.length).toBe(1);
     expect(result[0].resourceId).toBe(bookingData.resourceId);
@@ -91,13 +91,13 @@ describe('BookingService', () => {
 
     const booking = await bookingService.create(bookingData, 'user-id');
 
-    const result = await bookingService.remove(booking.booking.id);
+    const result = await bookingService.remove(booking.booking.id, 'user-id');
 
     expect(result.message).toBe('Booking removed successfully');
     expect((bookingService as any).bookings.length).toBe(0);
   });
 
   it('should not remove a non-existent booking', async () => {
-    await expect(bookingService.remove('non-existent-id')).rejects.toThrow(NotFoundException);
+    await expect(bookingService.remove('non-existent-id', 'user-id')).rejects.toThrow(NotFoundException);
   });
 });
