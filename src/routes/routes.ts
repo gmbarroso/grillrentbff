@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import userController from '../controllers/userController';
 import bookingController from '../controllers/bookingController';
+import resourceController from '../controllers/resourceController';
 
 const router = Router();
 
@@ -33,5 +34,8 @@ router.get('/bookings', asyncHandler(async (req: Request, res: Response) => book
 router.get('/bookings/user/:userId', asyncHandler(async (req: Request, res: Response) => bookingController.getBookingsByUser(req, res)));
 router.delete('/bookings/:id', asyncHandler(async (req: Request, res: Response) => bookingController.deleteBooking(req, res)));
 router.get('/bookings/availability/:resourceId', asyncHandler(async (req: Request, res: Response) => bookingController.availability(req, res)));
+
+// Rota de recursos
+router.get('/resources', asyncHandler(async (req: Request, res: Response) => resourceController.getResource(req, res)));
 
 export default router;
