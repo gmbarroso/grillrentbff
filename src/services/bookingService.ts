@@ -39,8 +39,8 @@ class BookingService {
     }
   }
 
-  async findAll(token: string) {
-    console.log('Getting all bookings');
+  async findAll(token: string, page: number = 1, limit: number = 10, sort: string = 'startTime', order: 'ASC' | 'DESC' = 'ASC') {
+    console.log('Getting all bookings with pagination and sorting');
     console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       return { message: 'All bookings retrieved successfully', bookings: this.bookings };
@@ -49,7 +49,8 @@ class BookingService {
         const response = await axios.get(`${this.apiUrl}/bookings`, {
           headers: {
             Authorization: `Bearer ${token}`
-          }
+          },
+          params: { page, limit, sort, order }
         });
         console.log('API response:', response.data);
         return response.data;
@@ -65,8 +66,8 @@ class BookingService {
     }
   }
 
-  async findByUser(userId: string, token: string) {
-    console.log('Getting bookings for user:', userId);
+  async findByUser(userId: string, token: string, page: number = 1, limit: number = 10, sort: string = 'startTime', order: 'ASC' | 'DESC' = 'ASC') {
+    console.log('Getting bookings for user with pagination and sorting:', userId);
     console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       const userBookings = this.bookings.filter(booking => booking.userId === userId);
@@ -76,7 +77,8 @@ class BookingService {
         const response = await axios.get(`${this.apiUrl}/bookings/user/${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`
-          }
+          },
+          params: { page, limit, sort, order }
         });
         console.log('API response:', response.data);
         return response.data;

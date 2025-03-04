@@ -33,7 +33,8 @@ class BookingController {
         res.status(401).send('Unauthorized');
         return;
       }
-      const result = await bookingService.findAll(token);
+      const { page = 1, limit = 10, sort = 'startTime', order = 'ASC' } = req.query;
+      const result = await bookingService.findAll(token, Number(page), Number(limit), String(sort), order as 'ASC' | 'DESC');
       res.status(200).send(result);
     } catch (err) {
       res.status(401).send({ message: (err as Error).message });
@@ -47,7 +48,8 @@ class BookingController {
         res.status(401).send('Unauthorized');
         return;
       }
-      const result = await bookingService.findByUser(req.params.userId, token);
+      const { page = 1, limit = 10, sort = 'startTime', order = 'ASC' } = req.query;
+      const result = await bookingService.findByUser(req.params.userId, token, Number(page), Number(limit), String(sort), order as 'ASC' | 'DESC');
       res.status(200).send(result);
     } catch (err) {
       res.status(404).send({ message: (err as Error).message });
