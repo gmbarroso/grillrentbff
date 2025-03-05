@@ -4,9 +4,3 @@ export interface CreateBookingDto {
   startTime: string;
   endTime: string;
 }
-
-export interface CheckAvailabilityDto {
-  resourceId: string;
-  startTime: string;
-  endTime: string;
-}

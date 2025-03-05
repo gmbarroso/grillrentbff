@@ -4,4 +4,11 @@ export class User {
   email!: string;
   password!: string;
   apartment!: string;
+  block!: number;
+  role!: string;
+}
+
+export enum UserRole {
+  ADMIN = 'admin',
+  RESIDENT = 'resident',
 }

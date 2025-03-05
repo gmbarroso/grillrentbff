@@ -3,15 +3,17 @@ export interface RegisterUserDto {
   email: string;
   password: string;
   apartment: string;
+  block: number;
 }
 
 export interface LoginUserDto {
-  email: string;
+  apartment: string;
+  block: number;
   password: string;
 }
 
 export interface UpdateUserProfileDto {
   name?: string;
   email?: string;
-  apartment?: string;
+  password?: string;
 }
