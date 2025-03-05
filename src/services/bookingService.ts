@@ -8,10 +8,12 @@ class BookingService {
   private apiUrl = API_URL;
 
   async create(createBookingDto: CreateBookingDto, token: string) {
+    console.log('Creating booking:', createBookingDto);
     console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       const booking = { id: this.generateId(), ...createBookingDto };
       this.bookings.push(booking);
+      console.log('Booking created in mock DB:', booking);
       return booking;
     } else {
       try {
@@ -38,7 +40,7 @@ class BookingService {
   }
 
   async findAll(token: string, page: number = 1, limit: number = 10, sort: string = 'startTime', order: 'ASC' | 'DESC' = 'ASC') {
-    console.log('Getting all bookings');
+    console.log('Getting all bookings with pagination and sorting');
     console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       return { message: 'All bookings retrieved successfully', bookings: this.bookings };
@@ -50,6 +52,7 @@ class BookingService {
           },
           params: { page, limit, sort, order }
         });
+        console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -64,6 +67,7 @@ class BookingService {
   }
 
   async findByUser(userId: string, token: string, page: number = 1, limit: number = 10, sort: string = 'startTime', order: 'ASC' | 'DESC' = 'ASC') {
+    console.log('Getting bookings for user with pagination and sorting:', userId);
     console.log('USE_MOCKS:', USE_MOCKS);
     if (USE_MOCKS) {
       const userBookings = this.bookings.filter(booking => booking.userId === userId);
@@ -76,6 +80,7 @@ class BookingService {
           },
           params: { page, limit, sort, order }
         });
+        console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -109,6 +114,7 @@ class BookingService {
             Authorization: `Bearer ${token}`
           }
         });
+        console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -142,6 +148,7 @@ class BookingService {
           },
           params: { startTime, endTime }
         });
+        console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
