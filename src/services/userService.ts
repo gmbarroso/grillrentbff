@@ -53,6 +53,7 @@ class UserService {
     } else {
       try {
         const response = await axios.post(`${this.apiUrl}/users/login`, loginUserDto);
+        console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -81,6 +82,7 @@ class UserService {
             Authorization: `Bearer ${token}`
           }
         });
+        console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -110,6 +112,7 @@ class UserService {
             Authorization: `Bearer ${token}`
           }
         });
+        console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -135,6 +138,7 @@ class UserService {
             Authorization: `Bearer ${token}`
           }
         });
+        console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -164,6 +168,7 @@ class UserService {
             Authorization: `Bearer ${token}`
           }
         });
+        console.log('API response:', response.data);
         return response.data;
       } catch (error) {
         if (axios.isAxiosError(error)) {

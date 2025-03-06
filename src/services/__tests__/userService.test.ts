@@ -126,7 +126,8 @@ describe('UserService', () => {
 
     await userService.register(registerUserDto);
 
-    const result = await userService.getAllUsers();
+    const token = 'test-token';
+    const result = await userService.getAllUsers(token);
 
     expect(result.users.length).toBe(1);
     expect(result.users[0].email).toBe(registerUserDto.email);

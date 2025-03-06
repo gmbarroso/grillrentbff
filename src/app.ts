@@ -1,12 +1,11 @@
 import express from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import routes from './routes/routes';
 import requestIdMiddleware from './middleware/requestIdMiddleware';
 import loggingMiddleware from './middleware/loggingMiddleware';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware';
 import rateLimitMiddleware from './middleware/rateLimitMiddleware';
-import path from 'path';
-import cors from 'cors';
 
 const app = express();
 
