@@ -34,6 +34,7 @@ describe('BookingController', () => {
       userId: 'user-id',
       startTime: new Date(Date.now() + 24 * 3600000).toISOString(),
       endTime: new Date(Date.now() + 48 * 3600000).toISOString(),
+      needTablesAndChairs: false
     };
 
     req.body = bookingData;

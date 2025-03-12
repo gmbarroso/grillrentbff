@@ -13,7 +13,8 @@ describe('BookingService', () => {
       resourceId: 'resource-id',
       userId: 'user-id',
       startTime: new Date(Date.now() + 24 * 3600000).toISOString(),
-      endTime: new Date(Date.now() + 48 * 3600000).toISOString()
+      endTime: new Date(Date.now() + 48 * 3600000).toISOString(),
+      needTablesAndChairs: false
     };
 
     const result = await bookingService.create(bookingData, 'user-id');
@@ -27,8 +28,9 @@ describe('BookingService', () => {
     const bookingData: CreateBookingDto = {
       resourceId: 'resource-id',
       userId: 'user-id',
-      startTime: new Date(Date.now() - 24 * 3600000).toISOString(),
-      endTime: new Date(Date.now() + 24 * 3600000).toISOString()
+      startTime: new Date(Date.now() + 12 * 3600000).toISOString(),
+      endTime: new Date(Date.now() + 24 * 3600000).toISOString(),
+      needTablesAndChairs: false
     };
 
     await expect(bookingService.create(bookingData, 'user-id')).rejects.toThrow(BadRequestException);
@@ -39,7 +41,8 @@ describe('BookingService', () => {
       resourceId: 'resource-id',
       userId: 'user-id',
       startTime: new Date(Date.now() + 24 * 3600000).toISOString(),
-      endTime: new Date(Date.now() + 48 * 3600000).toISOString()
+      endTime: new Date(Date.now() + 48 * 3600000).toISOString(),
+      needTablesAndChairs: false
     };
 
     await bookingService.create(bookingData, 'user-id');
@@ -54,7 +57,8 @@ describe('BookingService', () => {
       resourceId: 'resource-id',
       userId: 'user-id',
       startTime: new Date(Date.now() + 24 * 3600000).toISOString(),
-      endTime: new Date(Date.now() + 48 * 3600000).toISOString()
+      endTime: new Date(Date.now() + 48 * 3600000).toISOString(),
+      needTablesAndChairs: false
     };
 
     await bookingService.create(bookingData, 'user-id');
@@ -70,7 +74,8 @@ describe('BookingService', () => {
       resourceId: 'resource-id',
       userId: 'user-id',
       startTime: new Date(Date.now() + 24 * 3600000).toISOString(),
-      endTime: new Date(Date.now() + 48 * 3600000).toISOString()
+      endTime: new Date(Date.now() + 48 * 3600000).toISOString(),
+      needTablesAndChairs: false
     };
 
     await bookingService.create(bookingData, 'user-id');
@@ -86,7 +91,8 @@ describe('BookingService', () => {
       resourceId: 'resource-id',
       userId: 'user-id',
       startTime: new Date(Date.now() + 24 * 3600000).toISOString(),
-      endTime: new Date(Date.now() + 48 * 3600000).toISOString()
+      endTime: new Date(Date.now() + 48 * 3600000).toISOString(),
+      needTablesAndChairs: false
     };
 
     const booking = await bookingService.create(bookingData, 'user-id');
