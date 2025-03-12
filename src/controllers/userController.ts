@@ -99,6 +99,20 @@ class UserController {
       res.status(404).send({ message: (err as Error).message });
     }
   }
+
+  async logout(req: Request, res: Response): Promise<void> {
+    try {
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
+        res.status(401).send('Unauthorized');
+        return;
+      }
+      const result = await userService.logout(token);
+      res.status(200).send(result);
+    } catch (err) {
+      res.status(400).send({ message: (err as Error).message });
+    }
+  }
 }
 
 export default new UserController();

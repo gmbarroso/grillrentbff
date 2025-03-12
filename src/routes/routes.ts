@@ -20,6 +20,10 @@ router.post('/users/login', asyncHandler(async (req: Request, res: Response) => 
   console.log('Route /users called');
   return userController.login(req, res)
 }));
+router.post('/users/logout', asyncHandler(async (req: Request, res: Response) => {
+  console.log('Route /users/logout called');
+  return userController.logout(req, res)
+}));
 router.get('/users/profile', asyncHandler(async (req: Request, res: Response) => userController.getProfile(req, res)));
 router.put('/users/profile', asyncHandler(async (req: Request, res: Response) => userController.updateProfile(req, res)));
 router.get('/users', asyncHandler(async (req: Request, res: Response) => userController.getAllUsers(req, res)));

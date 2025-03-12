@@ -182,6 +182,30 @@ class UserService {
     }
   }
 
+  async logout(token: string) {
+    console.log('Logging out user');
+    try {
+      const response = await axios.post(`${this.apiUrl}/users/logout`, {}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      console.log('API response:', response.data);
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('API error:', error.response?.data);
+        if (error.response && error.response.status === 401) {
+          throw new UnauthorizedException(error.response.data.message);
+        }
+        if (error.response && error.response.status === 400) {
+          throw new BadRequestException(error.response.data.message);
+        }
+      }
+      throw error;
+    }
+  }
+
   private generateId() {
     return Math.random().toString(36).substr(2, 9);
   }
