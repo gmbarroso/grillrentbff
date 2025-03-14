@@ -2,6 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import userController from '../controllers/userController';
 import bookingController from '../controllers/bookingController';
 import resourceController from '../controllers/resourceController';
+import noticeController from '../controllers/noticeController';
 
 const router = Router();
 
@@ -41,5 +42,11 @@ router.get('/bookings/availability/:resourceId', asyncHandler(async (req: Reques
 
 // Rota de recursos
 router.get('/resources', asyncHandler(async (req: Request, res: Response) => resourceController.getResource(req, res)));
+
+// Rotas de notices
+router.post('/notices', asyncHandler(async (req: Request, res: Response) => noticeController.createNotice(req, res)));
+router.get('/notices', asyncHandler(async (req: Request, res: Response) => noticeController.getNotices(req, res)));
+router.put('/notices/:id', asyncHandler(async (req: Request, res: Response) => noticeController.updateNotice(req, res)));
+router.delete('/notices/:id', asyncHandler(async (req: Request, res: Response) => noticeController.deleteNotice(req, res)));
 
 export default router;
