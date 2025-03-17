@@ -39,6 +39,10 @@ router.get('/bookings', asyncHandler(async (req: Request, res: Response) => book
 router.get('/bookings/user/:userId', asyncHandler(async (req: Request, res: Response) => bookingController.getBookingsByUser(req, res)));
 router.delete('/bookings/:id', asyncHandler(async (req: Request, res: Response) => bookingController.deleteBooking(req, res)));
 router.get('/bookings/availability/:resourceId', asyncHandler(async (req: Request, res: Response) => bookingController.availability(req, res)));
+router.get('/bookings/reserved-times', asyncHandler(async (req: Request, res: Response) => {
+  console.log('Route /bookings/reserved-times called');
+  return bookingController.getReservedTimes(req, res);
+}));
 
 // Rota de recursos
 router.get('/resources', asyncHandler(async (req: Request, res: Response) => resourceController.getResource(req, res)));

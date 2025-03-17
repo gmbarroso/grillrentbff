@@ -165,6 +165,34 @@ class BookingService {
     }
   }
 
+  async getReservedTimes(resourceType: string, date: string | undefined, token: string) {
+    try {
+      const params: any = { resourceType };
+      if (resourceType !== 'grill' && date) {
+        params.date = date;
+      }
+
+      const response = await axios.get(`${this.apiUrl}/bookings/reserved-times`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        params
+      });
+
+      return response.data;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          throw new UnauthorizedException(error.response.data.message);
+        }
+        if (error.response?.status === 400) {
+          throw new BadRequestException(error.response.data.message);
+        }
+      }
+      throw error;
+    }
+  }
+
   private generateId() {
     return Math.random().toString(36).substr(2, 9);
   }

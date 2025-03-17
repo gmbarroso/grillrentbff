@@ -91,6 +91,33 @@ class BookingController {
       res.status(400).send({ message: (err as Error).message });
     }
   }
+
+  async getReservedTimes(req: Request, res: Response): Promise<void> {
+    const { resourceType, date } = req.query;
+
+    if (!resourceType) {
+      res.status(400).send({ message: 'resourceType is required' });
+      return;
+    }
+
+    try {
+      const token = req.header('Authorization')?.replace('Bearer ', '');
+      if (!token) {
+        res.status(401).send({ message: 'Unauthorized' });
+        return;
+      }
+
+      const result = await bookingService.getReservedTimes(resourceType as string, date as string | undefined, token);
+
+      if (resourceType === 'grill') {
+        res.status(200).send({ reservedDays: result.reservedDays });
+      } else {
+        res.status(200).send({ reservedTimes: result.reservedTimes });
+      }
+    } catch (err) {
+      res.status(400).send({ message: (err as Error).message });
+    }
+  }
 }
 
 export default new BookingController();
