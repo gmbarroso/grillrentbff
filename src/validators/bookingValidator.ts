@@ -4,5 +4,6 @@ export const createBookingSchema = Joi.object({
   resourceId: Joi.string().required(),
   startTime: Joi.date().iso().required(),
   endTime: Joi.date().iso().required(),
-  needTablesAndChairs: Joi.boolean().required()
+  needTablesAndChairs: Joi.boolean().required(),
+  bookedOnBehalf: Joi.string().optional()
 });
