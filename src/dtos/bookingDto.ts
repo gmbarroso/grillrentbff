@@ -4,4 +4,5 @@ export interface CreateBookingDto {
   startTime: string;
   endTime: string;
   needTablesAndChairs: boolean;
+  bookedOnBehalf?: string;
 }
